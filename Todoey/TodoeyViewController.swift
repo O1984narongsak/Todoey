@@ -20,11 +20,11 @@ class TodoeyViewController: UITableViewController {
         
      print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
-        loadItems()
+    loadItems()
         
     }
 
-    //MARK - TableView Datasource Methods
+//MARK: - TableView Datasource Methods
   
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -52,11 +52,14 @@ class TodoeyViewController: UITableViewController {
         return cell
     }
     
-    //MARK - TableView Delegate Methods
+//MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         print("itemOfRowCalled")
+        
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
@@ -66,7 +69,7 @@ class TodoeyViewController: UITableViewController {
         
     }
     
-    //MARK - Add new ITEM
+//MARK: - Add new ITEM
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
@@ -98,7 +101,7 @@ class TodoeyViewController: UITableViewController {
         
         present(alert, animated: true, completion: nil)
     }
-    // MARK - ModuleMenupulated Method.
+// MARK: - ModuleMenupulated Method.
     
     func saveItems(){
         
@@ -111,9 +114,9 @@ class TodoeyViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems(){
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest() ){
        
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
         
         do{
          itemArray = try context.fetch(request)
@@ -122,5 +125,26 @@ class TodoeyViewController: UITableViewController {
         }
     }
 
+}
+
+//MARK: - seacrh Bar method
+
+extension TodoeyViewController : UISearchBarDelegate{
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+//        request.predicate = predicate
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+//        request.sortDescriptors = [sortDescriptor]
+        
+        loadItems(with: request)
+        
+    }
 }
 
