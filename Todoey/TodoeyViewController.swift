@@ -12,27 +12,16 @@ class TodoeyViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    var defaults = UserDefaults.standard
-
+     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("items.plis")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let newItem = Item()
-        newItem.title = "Demolish"
-        itemArray.append(newItem)
+       
         
-        let newItem2 = Item()
-        newItem2.title = "GOGO"
-        itemArray.append(newItem2)
+        print(dataFilePath)
         
-        let newItem3 = Item()
-        newItem3.title = "BOO BOO"
-        itemArray.append(newItem3)
-        
-        
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item]{
-            itemArray = items
-        }
+        loadItems()
         
     }
 
@@ -72,19 +61,7 @@ class TodoeyViewController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-//Todo version 2
-//        if itemArray[indexPath.row].done == true {
-//            itemArray[indexPath.row].done = false
-//        }else {
-//            itemArray[indexPath.row].done = true
-//        }
-//Todo version 1
-//        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        } else {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-//        }
-        tableView.reloadData()
+        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -105,10 +82,9 @@ class TodoeyViewController: UITableViewController {
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
-            
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            
-            self.tableView.reloadData()
+         
+            self.saveItems()
+         
         }
         
         alert.addTextField { (alertTextField) in
@@ -120,7 +96,32 @@ class TodoeyViewController: UITableViewController {
         
         present(alert, animated: true, completion: nil)
     }
+    // MARK - ModuleMenupulated Method.
     
+    func saveItems(){
+        
+        let encoder = PropertyListEncoder()
+        
+        do{
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+            
+        } catch {
+            print("Error encoding item array, \(error)")
+        }
+        
+        self.tableView.reloadData()
+    }
     
+    func loadItems(){
+        if let data = try? Data(contentsOf: dataFilePath!){
+            let decoder = PropertyListDecoder()
+            do {
+            itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding item array\(error)")
+            }
+        }
+    }
 }
 
