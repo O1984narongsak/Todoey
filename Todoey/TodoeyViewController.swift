@@ -114,15 +114,17 @@ class TodoeyViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest() ){
+    func loadItems( ){
        
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
         
         do{
          itemArray = try context.fetch(request)
-        }catch{
+        } catch {
          print("Error cannot fectching from context\(error)")
         }
+        
+        tableView.reloadData()
     }
 
 }
@@ -137,14 +139,17 @@ extension TodoeyViewController : UISearchBarDelegate{
         
         request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
         
-//        request.predicate = predicate
-        
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
-//        request.sortDescriptors = [sortDescriptor]
+        print(searchBar.text!)
         
-        loadItems(with: request)
+        do{
+            itemArray = try context.fetch(request)
+        } catch {
+            print("Error cannot fectching from context\(error)")
+        }
         
+        tableView.reloadData()
     }
 }
 
