@@ -15,6 +15,7 @@
 		F15F4B9721352CDF0037787F /* TodoeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15F4B9621352CDF0037787F /* TodoeyTests.swift */; };
 		F15F4BA221352CDF0037787F /* TodoeyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15F4BA121352CDF0037787F /* TodoeyUITests.swift */; };
 		F1C8A6BA2136970E00FAB735 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F1C8A6B82136970D00FAB735 /* DataModel.xcdatamodeld */; };
+		F1E8FF84213806370052161E /* CatagoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E8FF83213806370052161E /* CatagoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		F15F4BA121352CDF0037787F /* TodoeyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoeyUITests.swift; sourceTree = "<group>"; };
 		F15F4BA321352CDF0037787F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F1C8A6B92136970D00FAB735 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		F1E8FF83213806370052161E /* CatagoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				F15F4B8321352CDB0037787F /* TodoeyViewController.swift */,
+				F1E8FF83213806370052161E /* CatagoryViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1E8FF84213806370052161E /* CatagoryViewController.swift in Sources */,
 				F15F4B8421352CDB0037787F /* TodoeyViewController.swift in Sources */,
 				F1C8A6BA2136970E00FAB735 /* DataModel.xcdatamodeld in Sources */,
 				F15F4B8221352CDB0037787F /* AppDelegate.swift in Sources */,
