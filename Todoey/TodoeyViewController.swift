@@ -114,9 +114,9 @@ class TodoeyViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems( ){
+    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest()){
        
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
         
         do{
          itemArray = try context.fetch(request)
@@ -143,13 +143,19 @@ extension TodoeyViewController : UISearchBarDelegate{
         
         print(searchBar.text!)
         
-        do{
-            itemArray = try context.fetch(request)
-        } catch {
-            print("Error cannot fectching from context\(error)")
-        }
+        loadItems(with: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            
+            DispatchQueue.main.async {
+                
+                searchBar.resignFirstResponder()
+            }
         
-        tableView.reloadData()
+        }
     }
 }
 
