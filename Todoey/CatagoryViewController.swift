@@ -9,8 +9,7 @@
 import UIKit
 import RealmSwift
 
-class CatagoryViewController: UITableViewController {
-    
+class CatagoryViewController: SwipeTableViewController {
     let realm = try! Realm()
     
     var catagoryArray: Results<Catagory>?
@@ -26,13 +25,14 @@ class CatagoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return catagoryArray?.count ?? 1
-    }
+    }    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CatagoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = catagoryArray?[indexPath.row].name ?? "No Catagory Added Yet"
+        
         
         return cell
         
@@ -61,10 +61,25 @@ class CatagoryViewController: UITableViewController {
     
     func loadCatagory() {
         
-        catagories = realm.objects(Catagory.self)
+        catagoryArray = realm.objects(Catagory.self)
         
         tableView.reloadData()
         
+    }
+    
+    //MARK:- Delete Data from Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+                    if let catagoryForDeletion = self.catagories?[indexPath].row {
+                        do{
+                            try self.realm.write{
+                                self.realm.delete(catagoryForDeletion)
+                            }
+                        }catch {
+                            print("Error Deleting Catagory\(error)")
+                        }
+                        //                tableView.reloadData() change by SwipeIptions
+                    }
     }
     
     //MARK: - Add New Categories
@@ -111,7 +126,9 @@ class CatagoryViewController: UITableViewController {
             destinationVC.selectedCatagory = catagoryArray?[indexPath.row] ??
         }
     }
-    
-    
-    
+
 }
+
+//MARK: - SwipeCell Delegate Methods
+
+

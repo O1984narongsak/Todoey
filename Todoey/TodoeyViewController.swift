@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoeyViewController: UITableViewController {
+class TodoeyViewController: SwipeTableViewController {
     
     var todoItem : Results<Item>?
     
@@ -24,7 +24,7 @@ class TodoeyViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-     print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+//     print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
     }
 
@@ -36,13 +36,25 @@ class TodoeyViewController: UITableViewController {
         
     }
     
+    //TODO: - declare swipecellkill
+    
+    //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! SwipeTableViewCell
+    //        cell.delegate = self
+    //        return cell
+    //    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoViewCell", for: indexPath)
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItem?[indexPath.row] {
           
             cell.textLabel?.text = item.title
+            
+        //Ternary operator ==>
+            // Value = condition ? valueIfTrue : valueIfFalse
             
             cell.accessoryType = item.done ? .checkmark : .none
             
@@ -52,19 +64,12 @@ class TodoeyViewController: UITableViewController {
             
         }
         
-        
-        
-//        before Refactor
-//        if item.done == true {
-//            cell.accessoryType = .checkmark
-//        } else {
-//            cell.accessoryType = .none
-//        }
-        
         return cell
     }
     
 //MARK: - TableView Delegate Methods
+    
+
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -73,7 +78,7 @@ class TodoeyViewController: UITableViewController {
         if let item = todoItem?[indexPath.row] {
             do{
                 try realm.write {
-//                  realm,delete(item)
+//                  realm.delete(item)
                     item.done = !item.done
             }
             } catch {
@@ -134,12 +139,26 @@ class TodoeyViewController: UITableViewController {
 
         tableView.reloadData()
     }
+        
+        //MARK: - delete item methods
+        
+    override func updateModel(at indexPath : IndexPath){
+        
+        if let itemForDeletion = todoItem?[indexPath].row {
+            do{
+                try self.realm.write{
+                    self.realm.delete(itemForDeletion)
+                }
+            }catch {
+                print("Error Deleting Items\(error)")
+            }
+        }
 
 }
 
 //MARK: - seacrh Bar method
-
-extension TodoeyViewController : UISearchBarDelegate{
+    
+extension TodoeyViewController : UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
@@ -161,3 +180,4 @@ extension TodoeyViewController : UISearchBarDelegate{
     }
 }
 
+}
