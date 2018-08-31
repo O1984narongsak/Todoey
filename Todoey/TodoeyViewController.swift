@@ -82,14 +82,6 @@ class TodoeyViewController: UITableViewController {
             
             tableView.reloadData()
         
-        
-//        context.delete(itemArray[indexPath.row])
-//        itemArray.remove(at: indexPath.row)
-        
-//        todoItem[indexPath.row].done = !todoItem[indexPath.row].done
-//
-//        saveItems()
-        
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -111,6 +103,7 @@ class TodoeyViewController: UITableViewController {
                 try self.realm.write {
                     let newItem = Item()
                     newItem.title = textField.text!
+                    newItem.dataCreated = Date()
                     currentCatagory.items.append(newItem)
                 }
                 }catch{
@@ -139,14 +132,6 @@ class TodoeyViewController: UITableViewController {
         
         let itemArray = selectedCatagory?.items.sorted(byKeyPath: "title", ascending: true)
 
-        itemArray = realm.objects(Item.self)
-
-        do{
-         itemArray = try context.fetch(request)
-        } catch {
-         print("Error cannot fectching from context\(error)")
-        }
-
         tableView.reloadData()
     }
 
@@ -154,31 +139,25 @@ class TodoeyViewController: UITableViewController {
 
 //MARK: - seacrh Bar method
 
-//extension TodoeyViewController : UISearchBarDelegate{
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//
-//       let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        print(searchBar.text!)
-//
-//        loadItems(with: request,predicate: predicate)
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count == 0 {
-//            loadItems()
-//
-//            DispatchQueue.main.async {
-//
-//                searchBar.resignFirstResponder()
-//            }
-//
-//        }
-//    }
-//}
+extension TodoeyViewController : UISearchBarDelegate{
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        todoItem = todoItem?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath:"dataCreated",ascending: true )
+
+
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+
+            DispatchQueue.main.async {
+
+                searchBar.resignFirstResponder()
+            }
+
+        }
+    }
+}
 

@@ -11,7 +11,9 @@ import RealmSwift
 
 class Item : Object {
     @objc dynamic var title : String = ""
-    @onjc dynamic var done : Bool = false
+    @objc dynamic var done : Bool = false
+    @objc dynamic var dataCreated: Date?
+    
     var parentCategory = LinkingObject(fromType: Catagory.self, property: "items")
     
 }
